@@ -57,6 +57,8 @@ int get_block_size(void) {
 /* Returns the size (in B) of the cache. */
 int get_cache_size(int block_size) {
   //have the block size as a parameter
+  
+  flush_cache(); // flush cache
 
   int address = block_size; //initializes to the first block size, ex: K=2, first address = 2, since zero is already loaded
 
