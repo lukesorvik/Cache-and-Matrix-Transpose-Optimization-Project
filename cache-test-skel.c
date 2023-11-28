@@ -68,6 +68,8 @@ int get_cache_size(int block_size) {
 
   for(int i= 0; i<itr ; i++) {
     //test i bytes in cache
+    //we want to add blocks to the cache until 0 is no longer in the cache (meaning we reached the cache size, and are in a new cache image)
+    //cache image is how many blocks can fit in the cache at once
     access_cache(i);
   }
 
