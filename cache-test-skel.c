@@ -56,34 +56,53 @@ int get_block_size(void) {
 
 /* Returns the size (in B) of the cache. */
 int get_cache_size(int block_size) {
-  //have the block size as a parameter
-	int cacheSize = 0;
-	int cache_check = block_size;
-	flush_cache();
-	access_cache(0); //loads 0 onto the cache
+  
+ flush_cache();
+ int itr =1;
+ 
+ while(TRUE){
+  itr*=2;
+  access_cache(0);
 
-	while (access_cache(0)) {
-	//run as long as 0 is still in the cache
-	cacheSize = block_size;
 
-		while(cacheSize <= cache_check) {
-		//while the size of cache is less than the size of the block
-		cacheSize += block_size;
-		access_cache(cacheSize);
-		}
-	cache_check += block_size; //sets the 
+  for(int i= 0; i<itr ; i++) {
+    access_cache(i);
+  }
 
-	}
+  if (!access_cache(0)) {
+    return itr/2;
+  }
 
-	return cacheSize;
+ }
 }
 
 
 /* Returns the associativity of the cache. */
 int get_cache_assoc(int cache_size) {
-  /* YOUR CODE GOES HERE */
-  return -1;
+  //have to use the cache size
+
+    int associativity = 0;
+    flush_cache(); //flushes the cache
+    access_cache(0); //cold miss loads 0 onto the cache
+
+    while(access_cache(0)) {
+      //run while 0 is in cache
+      
+      associativity++;
+
+      //nested for loop since 0 needs to be only read once before adding everything else, or it wont be replaced by LRU replacement policy
+      //LRU = replace least recently used
+      for (int i =0; i< associativity; i++) {
+        access_cache(i * cache_size); //since the cache size address always goes to the first block/set
+        //we can use this to fill up the first set
+      }
+
+
+    }
+  
+  return associativity-1;
 }
+
 
 
 /* Run the functions above on a given cache and print the results. */
