@@ -58,19 +58,22 @@ int get_block_size(void) {
 int get_cache_size(int block_size) {
   
  flush_cache();
- int itr =1;
+ int itr =1; //start at 1
  
- while(TRUE){
-  itr*=2;
-  access_cache(0);
+ while(TRUE){ //run until we return
+  itr*=2; //increase the itr by power of 2 each time
+  //we know the cache size is a power of 2
+  access_cache(0); //access 0
 
 
   for(int i= 0; i<itr ; i++) {
+    //test i bytes in cache
     access_cache(i);
   }
 
   if (!access_cache(0)) {
-    return itr/2;
+    //if 0 is not on the cache after adding then we reached the cache limit last iteratio
+    return itr/2; //divide by 2 to undo the current itr (that should be a power of 2 more than cache size)
   }
 
  }
