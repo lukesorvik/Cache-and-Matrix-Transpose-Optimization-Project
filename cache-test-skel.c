@@ -57,35 +57,25 @@ int get_block_size(void) {
 /* Returns the size (in B) of the cache. */
 int get_cache_size(int block_size) {
   //have the block size as a parameter
-  
-  flush_cache(); // flush cache
+	int cacheSize = 0;
+	int cache_check = block_size;
+	flush_cache();
+	access_cache(0); //loads 0 onto the cache
 
-  int address = block_size; //initializes to the first block size, ex: K=2, first address = 2, since zero is already loaded
+	while (access_cache(0)) {
+	//run as long as 0 is still in the cache
+	cacheSize = block_size;
 
-  access_cache(0); //cold miss address 0, loads it onto the block
+		while(cacheSize <= cache_check) {
+		//while the size of cache is less than the size of the block
+		cacheSize += block_size;
+		access_cache(cacheSize);
+		}
+	cache_check += block_size; //sets the 
 
-  int cache_size = 0; //starts at 0 in case can only fit one block
+	}
 
-   while (access_cache(0)) {
-    //test if first address loaded is still in cache
-    //stop running if not
-      //returns true if address in in the cache (1), false if not 0
-
-      //executes this if 0 is still in cache (not overwrote)
-
-      access_cache(address); //loads the current block onto the cache
-
-      address += block_size;
-      cache_size += block_size;
-
-
-      //so we want the address to miss once to load onto cache
-      //then we want to go through the cache until it misses(meaning it is the end of the block)
-
-    }
-
-
-  return cache_size;
+	return cacheSize;
 }
 
 
