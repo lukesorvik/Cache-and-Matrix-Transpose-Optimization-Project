@@ -27,29 +27,39 @@ int is_transpose(int M, int N, int A[M][N], int B[N][M]);
  */
 char transpose_submit_desc[] = "Transpose submission"; //do not change
 void transpose_submit(int M, int N, int A[M][N], int B[N][M]) {
-    int i, j, ii, jj;
-    int bsize = 8;  // You can adjust the block size as needed
+  int i, j, ii, jj;
+    int bsize = 32;  // Block size
     int temp1, temp2;
 
-    for (i = 0; i < M; i++)
-        for (j = 0; j < N; j++)
+    // Copy matrix A to matrix B
+    // Loop over each element in A and copy its transpose to B
+    for (i = 0; i < M; i++) {
+        for (j = 0; j < N; j++) {
             B[j][i] = A[i][j];
+        }
+    }
 
+    // Transpose the matrix B using blocking
     for (ii = 0; ii < M; ii += bsize) {
         for (jj = 0; jj < N; jj += bsize) {
+            // Iterate over each block in B
             for (i = ii; i < ii + bsize && i < M; i++) {
                 for (j = jj; j < jj + bsize && j < N; j++) {
+                    // Swap non-diagonal elements of the block to achieve the transpose
+                    // This helps improve cache locality by accessing elements in a more favorable order
                     if (i != j) {
-                        temp1 = B[j][i];
-                        temp2 = B[i][j];
-                        B[j][i] = temp2;
-                        B[i][j] = temp1;
+                        //if they are not the same, ie if we are not in a diagonal
+                        temp1 = B[j][i];  // Store B[j][i] in temp1
+                        temp2 = B[i][j];  // Store B[i][j] in temp2
+                        B[j][i] = temp2;   // Swap B[j][i] with B[i][j]
+                        B[i][j] = temp1;   // Swap B[i][j] with B[j][i]
                     }
                 }
             }
         }
     }
 }
+
 
 
 // You can define additional transpose functions below. We've defined a simple
