@@ -2,8 +2,8 @@
  * CSE 351 Lab 4 (Caches and Cache-Friendly Code)
  * Part 1 - Inferring Mystery Cache Geometries
  *
- * Name(s):  Luke sorvik
- * NetID(s): luke sorv
+ * Name(s): Luke Sorvik, Timofei Kachan 
+ * NetID(s): lukesorv, timofeik
  *
  * NOTES:
  * 1. When using access_cache() you do not need to provide a "real" memory
